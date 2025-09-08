@@ -1,103 +1,172 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { HeroSection } from '@/components/HeroSection';
+import { WorkoutImport } from '@/components/WorkoutImport';
+import { WorkoutSession } from '@/components/WorkoutSession';
+import { WorkoutHistory } from '@/components/WorkoutHistory';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dumbbell, History, Upload } from 'lucide-react';
+import { useLocalStorage } from '@/hooks/use-local-storage';
+import { Workout, WorkoutSession as WorkoutSessionType } from '@/types/workout';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [currentView, setCurrentView] = useState<'home' | 'import' | 'session'>('home');
+  const [currentWorkout, setCurrentWorkout] = useState<Workout | null>(null);
+  const [workoutHistory, setWorkoutHistory] = useLocalStorage<WorkoutSessionType[]>('workout-history', []);
+  const [workoutTemplates, setWorkoutTemplates] = useLocalStorage<Workout[]>('workout-templates', []);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleWorkoutImported = (workout: Workout) => {
+    setWorkoutTemplates(prev => [...prev, workout]);
+    setCurrentWorkout(workout);
+    setCurrentView('session');
+  };
+
+  const handleWorkoutComplete = (sessionData: WorkoutSessionType) => {
+    setWorkoutHistory(prev => [sessionData, ...prev]);
+    setCurrentView('home');
+    setCurrentWorkout(null);
+  };
+
+  const handleRepeatWorkout = (templateId: string) => {
+    const template = workoutTemplates.find(w => w.id === templateId);
+    if (template) {
+      setCurrentWorkout(template);
+      setCurrentView('session');
+    }
+  };
+
+  const handleGetStarted = () => {
+    setCurrentView('import');
+  };
+
+  const handleBack = () => {
+    setCurrentView('home');
+    setCurrentWorkout(null);
+  };
+
+  // Show workout session
+  if (currentView === 'session' && currentWorkout) {
+    return (
+      <div className="min-h-screen bg-background p-4">
+        <div className="max-w-2xl mx-auto">
+          <WorkoutSession
+            workout={currentWorkout}
+            onBack={handleBack}
+            onWorkoutComplete={handleWorkoutComplete}
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+    );
+  }
+
+  // Show import page
+  if (currentView === 'import') {
+    return (
+      <div className="min-h-screen bg-background p-4">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={handleBack}>
+              ← Back
+            </Button>
+            <h1 className="text-2xl font-bold">Import Workout</h1>
+          </div>
+          <WorkoutImport onWorkoutImported={handleWorkoutImported} />
+        </div>
+      </div>
+    );
+  }
+
+  // Show home page
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-2">
+            <Dumbbell className="h-8 w-8" style={{ color: 'hsl(167 79% 39%)' }} />
+            <h1 className="text-xl font-bold">AI Workout Tracker</h1>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <HeroSection onGetStarted={handleGetStarted} />
+
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        {workoutHistory.length > 0 || workoutTemplates.length > 0 ? (
+          <Tabs defaultValue="history" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="history" className="flex items-center gap-2">
+                <History className="h-4 w-4" />
+                History
+              </TabsTrigger>
+              <TabsTrigger value="templates" className="flex items-center gap-2">
+                <Dumbbell className="h-4 w-4" />
+                Templates
+              </TabsTrigger>
+              <TabsTrigger value="import" className="flex items-center gap-2">
+                <Upload className="h-4 w-4" />
+                Import
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="history" className="mt-6">
+              <WorkoutHistory 
+                sessions={workoutHistory}
+                onRepeatWorkout={handleRepeatWorkout}
+              />
+            </TabsContent>
+            
+            <TabsContent value="templates" className="mt-6">
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold">Saved Templates</h2>
+                {workoutTemplates.map((template) => (
+                  <Card key={template.id} className="shadow-card">
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-lg font-semibold">{template.name}</h3>
+                          <p className="text-muted-foreground">
+                            {template.exercises.length} exercises
+                          </p>
+                        </div>
+                        <Button
+                          onClick={() => handleRepeatWorkout(template.id)}
+                          variant="default"
+                        >
+                          Start Workout
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="import" className="mt-6">
+              <WorkoutImport onWorkoutImported={handleWorkoutImported} />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <Card className="shadow-card">
+            <CardContent className="p-12 text-center">
+              <Dumbbell className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
+              <h2 className="text-2xl font-bold mb-4">Ready to start?</h2>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                Import your first workout to begin tracking your fitness progress.
+              </p>
+              <Button onClick={handleGetStarted} className="bg-gradient-primary hover:opacity-90 text-white" size="lg">
+                <Upload className="mr-2 h-5 w-5" />
+                Import Workout
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
