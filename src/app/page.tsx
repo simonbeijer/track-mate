@@ -86,8 +86,8 @@ export default function Home() {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center gap-2">
-            <Dumbbell className="h-8 w-8" style={{ color: 'hsl(167 79% 39%)' }} />
-            <h1 className="text-xl font-bold">AI Workout Tracker</h1>
+            <Dumbbell className="h-8 w-8 iconColor" style={{ color: 'hsl(167 79% 39%)' }} />
+            <h1 className="text-xl font-bold">Track Mate</h1>
           </div>
         </div>
       </header>
@@ -97,20 +97,15 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-12">
-        {workoutHistory.length > 0 || workoutTemplates.length > 0 ? (
           <Tabs defaultValue="history" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="history" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 bg-gray-200">
+              <TabsTrigger value="history" className="flex items-center gap-2 ">
                 <History className="h-4 w-4" />
                 History
               </TabsTrigger>
               <TabsTrigger value="templates" className="flex items-center gap-2">
                 <Dumbbell className="h-4 w-4" />
                 Templates
-              </TabsTrigger>
-              <TabsTrigger value="import" className="flex items-center gap-2">
-                <Upload className="h-4 w-4" />
-                Import
               </TabsTrigger>
             </TabsList>
             
@@ -146,26 +141,8 @@ export default function Home() {
                 ))}
               </div>
             </TabsContent>
-            
-            <TabsContent value="import" className="mt-6">
-              <WorkoutImport onWorkoutImported={handleWorkoutImported} />
-            </TabsContent>
           </Tabs>
-        ) : (
-          <Card className="shadow-card">
-            <CardContent className="p-12 text-center">
-              <Dumbbell className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
-              <h2 className="text-2xl font-bold mb-4">Ready to start?</h2>
-              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                Import your first workout to begin tracking your fitness progress.
-              </p>
-              <Button onClick={handleGetStarted} className="bg-gradient-primary hover:opacity-90 text-white" size="lg">
-                <Upload className="mr-2 h-5 w-5" />
-                Import Workout
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+        
       </div>
     </div>
   );

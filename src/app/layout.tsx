@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Workout Tracker",
-  description: "Turn AI workouts into reality with our simple, focused fitness tracker",
+  title: "Track Mate",
+  description: "Turn AI workouts into reality with our simple,tracker app",
 };
 
 export default function RootLayout({

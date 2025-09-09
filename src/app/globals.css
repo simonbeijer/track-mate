@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-/* AI Workout Tracker Design System - Fitness-inspired, clean and modern */
-
 @layer base {
   :root {
     --background: 210 17% 98%;
@@ -95,6 +93,16 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+@layer utilities {
+  .focus-ring-primary {
+    @apply focus-visible:ring-2 focus-visible:ring-[hsl(var(--primary))] focus-visible:ring-offset-2;
+  }
+}
+
+  .iconColor{
+    color: hsl(167 79% 39%)
   }
   
   .shadow-card {

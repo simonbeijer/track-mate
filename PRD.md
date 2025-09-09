@@ -1,4 +1,4 @@
-# AI Workout Tracker - Product Requirements Document
+# Track Mate - Product Requirements Document
 
 ## Executive Summary
 

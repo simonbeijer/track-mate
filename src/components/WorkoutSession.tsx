@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Trophy, Target, Weight, Hash, Timer } from 'lucide-react';
+import { ArrowLeft, Trophy, Superscript, Target, Weight, ListChecks , Timer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Exercise {
@@ -201,7 +201,7 @@ export const WorkoutSession: React.FC<WorkoutSessionProps> = ({
                       onClick={() => toggleOption(exercise.id, 'showSets')}
                       className="h-8 w-8 p-0"
                     >
-                      <Hash className="h-4 w-4" />
+                      <ListChecks  className="h-4 w-4" />
                     </Button>
                     <Button
                       variant={exerciseState.showWeight ? "default" : "outline"}
@@ -217,7 +217,7 @@ export const WorkoutSession: React.FC<WorkoutSessionProps> = ({
                       onClick={() => toggleOption(exercise.id, 'showReps')}
                       className="h-8 w-8 p-0"
                     >
-                      <Target className="h-4 w-4" />
+                      <Superscript className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
