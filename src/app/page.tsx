@@ -99,7 +99,7 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-4 py-12">
           <Tabs defaultValue="history" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-gray-200">
-              <TabsTrigger value="history" className="flex items-center gap-2 ">
+              <TabsTrigger value="history" className="flex items-center gap-2 data-[state=active]:bg-white">
                 <History className="h-4 w-4" />
                 History
               </TabsTrigger>
