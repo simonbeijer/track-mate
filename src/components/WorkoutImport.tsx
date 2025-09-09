@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Workout } from '@/types/workout'
+import { jsonrepair } from 'jsonrepair';
 
 interface Exercise {
   name: string;
@@ -50,7 +51,7 @@ export const WorkoutImport: React.FC<WorkoutImportProps> = ({
 {
   "Push Workout": {
     "Bench Press": {
-      "sets": "4",
+      "sets": 4,
       "reps": "6-8"
     },
     "Overhead Press": {...}
@@ -157,6 +158,17 @@ The JSON must follow this exact structure:
     setExercises((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const sanitizeJson = (input: string) => {
+    const cleanJson = input
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u200B\u200C\u200D\uFEFF]/g, "")
+    .replace(/\u00A0/g, " ")
+    .trim();
+    // jsonrepair(input)
+    setJsonInput(cleanJson)
+  }
+
   return (
     <div className="space-y-6">
       {/* Prompt Helper */}
@@ -215,7 +227,7 @@ The JSON must follow this exact structure:
           <Textarea
             placeholder="Paste your workout JSON here..."
             value={jsonInput}
-            onChange={(e) => setJsonInput(e.target.value)}
+            onChange={(e) => sanitizeJson(e.target.value)}
             className="min-h-[150px] font-mono text-sm"
           />
 
