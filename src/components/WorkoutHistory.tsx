@@ -5,29 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { History, Calendar, Repeat, Trophy } from 'lucide-react';
-
-interface CompletedSet {
-  done: boolean;
-  weight?: number;
-  reps?: number;
-}
-
-interface CompletedExercise {
-  exercise_id: number;
-  name: string;
-  completed: boolean;
-  completed_sets: CompletedSet[];
-}
-
-
-interface WorkoutSession {
-  id: string;
-  template_id: string;
-  date: string;
-  duration_minutes?: number;
-  status: 'completed' | 'in_progress';
-  completed_exercises: CompletedExercise[];
-}
+import { WorkoutSession } from '@/types/workout';
 
 interface WorkoutHistoryProps {
   sessions: WorkoutSession[];
