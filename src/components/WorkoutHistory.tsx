@@ -6,13 +6,27 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { History, Calendar, Repeat, Trophy } from 'lucide-react';
 
+interface CompletedSet {
+  done: boolean;
+  weight?: number;
+  reps?: number;
+}
+
+interface CompletedExercise {
+  exercise_id: number;
+  name: string;
+  completed: boolean;
+  completed_sets: CompletedSet[];
+}
+
+
 interface WorkoutSession {
   id: string;
   template_id: string;
   date: string;
   duration_minutes?: number;
   status: 'completed' | 'in_progress';
-  completed_exercises: any[];
+  completed_exercises: CompletedExercise[];
 }
 
 interface WorkoutHistoryProps {
@@ -39,7 +53,7 @@ export const WorkoutHistory: React.FC<WorkoutHistoryProps> = ({
 
   const getCompletedSetsCount = (session: WorkoutSession) => {
     return session.completed_exercises.reduce((total, exercise) => {
-      return total + exercise.completed_sets.filter((set: any) => set.done).length;
+      return total + exercise.completed_sets.filter((set) => set.done).length;
     }, 0);
   };
 
@@ -116,11 +130,11 @@ export const WorkoutHistory: React.FC<WorkoutHistoryProps> = ({
                   <div key={idx} className="text-sm">
                     <span className="font-medium">{exercise.name}:</span>
                     <span className="text-muted-foreground ml-2">
-                      {exercise.completed_sets.filter((set: any) => set.done).length}/{exercise.completed_sets.length} sets
+                      {exercise.completed_sets.filter((set) => set.done).length}/{exercise.completed_sets.length} sets
                     </span>
-                    {exercise.completed_sets.some((set: any) => set.weight) && (
+                    {exercise.completed_sets.some((set) => set.weight) && (
                       <span className="text-muted-foreground ml-2">
-                        (Best: {Math.max(...exercise.completed_sets.filter((set: any) => set.weight).map((set: any) => set.weight))}kg)
+                        (Best: {Math.max(...exercise.completed_sets.filter((set) => set.weight).map((set) => set.weight).filter((w): w is number => w !== undefined))}kg)
                       </span>
                     )}
                   </div>

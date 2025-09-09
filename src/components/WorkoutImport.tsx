@@ -22,6 +22,7 @@ import {
   X,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Workout } from '@/types/workout'
 
 interface Exercise {
   name: string;
@@ -30,7 +31,7 @@ interface Exercise {
 }
 
 interface WorkoutImportProps {
-  onWorkoutImported: (workout: any) => void;
+  onWorkoutImported: (workout: Workout) => void;
 }
 
 export const WorkoutImport: React.FC<WorkoutImportProps> = ({
@@ -110,13 +111,13 @@ The JSON must follow this exact structure:
       }
 
       setWorkoutName(workoutNameFromJson);
-      const exercisesList: Exercise[] = Object.entries(exercisesData).map(
-        ([name, details]: [string, any]) => ({
-          name,
-          sets: parseInt(details.sets) || 3,
-          target_reps: details.reps || "8-10",
-        })
-      );
+      const exercisesList: Exercise[] = Object.entries(
+        exercisesData as Record<string, { sets: number | string; reps: string }>
+      ).map(([name, details]) => ({
+        name,
+        sets: parseInt(details.sets as string),
+        target_reps: details.reps,
+      }));
 
       setExercises(exercisesList);
       setShowPreview(true);
@@ -302,3 +303,5 @@ The JSON must follow this exact structure:
     </div>
   );
 };
+
+

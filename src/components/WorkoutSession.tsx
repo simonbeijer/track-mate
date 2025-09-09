@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Trophy, Superscript, Target, Weight, ListChecks , Timer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { WorkoutSession as WorkoutSessionType } from '@/types/workout';
 
 interface Exercise {
   id: string | number;
@@ -26,7 +27,7 @@ interface Workout {
 interface WorkoutSessionProps {
   workout: Workout;
   onBack: () => void;
-  onWorkoutComplete: (sessionData: any) => void;
+  onWorkoutComplete: (sessionData: WorkoutSessionType) => void;
 }
 
 interface ExerciseState {
@@ -120,7 +121,7 @@ export const WorkoutSession: React.FC<WorkoutSessionProps> = ({
       template_id: workout.id,
       date: new Date().toISOString(),
       duration_minutes: duration,
-      status: 'completed',
+      status: 'completed'  as const,
       completed_exercises: workout.exercises.map(exercise => ({
         exercise_id: exercise.id,
         name: exercise.name,
